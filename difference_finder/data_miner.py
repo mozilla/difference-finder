@@ -52,22 +52,21 @@ class DataMiner:
 
     def _run_binomial(self, split1, name1, split2, name2, column):
         MIN_OBS = 10
-        ci = []
+        ci = {}
         for name, split in [(name1, split1), (name2, split2)]:
             if len(split) < MIN_OBS:
                 print(
                     f"{column}: Not running binomial test. Too few observations in {name} (MIN_OBS={MIN_OBS})."
                 )
                 return
-            ci.append(
-                proportion_confint(
-                    split.sum(), len(split), method="wilson", alpha=self.alpha
-                )
+            ci[name] = proportion_confint(
+                split.sum(), len(split), method="wilson", alpha=self.alpha
             )
-        if (ci[0][1] < ci[1][0]) or (ci[1][1] < ci[0][0]):
+        if (ci[name1][1] < ci[name2][0]) or (ci[name2][1] < ci[name1][0]):
+            # If the confidence intervals don't overlap, then print a message with both confidence intervals.
             print()
             print(
-                f"{column}: {name1} [{ci[0][0]:.2f}, {ci[0][1]:.2f}] vs {name2} [{ci[1][0]:.2f}, {ci[1][1]:.2f}]"
+                f"{column}: {name1} [{ci[name1][0]:.2f}, {ci[name1][1]:.2f}] vs {name2} [{ci[name2][0]:.2f}, {ci[name2][1]:.2f}]"
             )
         else:
             print(f"No difference in {column} for {name1} vs {name2}.")
