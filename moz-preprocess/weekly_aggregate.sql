@@ -1,4 +1,9 @@
-  --Unpack event counts by type
+/*
+This query joins a week's worth of data from Clients Daily to Search Clients Daily on (client_id, submission_date).
+Then, it aggregates the joined data for each client over the entire week. 
+*/
+
+--Unpack event counts by type
 CREATE TEMP FUNCTION
   count_event_by_type(event_type STRING,
     scalar_parent_telemetry_event_counts_sum ANY type) AS ( (

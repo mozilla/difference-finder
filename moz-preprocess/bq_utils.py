@@ -14,7 +14,7 @@ def fetch_weekly_aggregate(week_start_date, segment, filter=None):
     """
     if not filter:
         filter = "True = True"
-    with open("weekly_aggregate_sql", "r") as f:
+    with open("weekly_aggregate.sql", "r") as f:
         sql = f.read().strip()
     sql = (
         sql.replace("@week_start_date", week_start_date)
@@ -23,10 +23,3 @@ def fetch_weekly_aggregate(week_start_date, segment, filter=None):
     )
     client = bigquery.Client(project="mozdata")
     return client.query(sql).to_dataframe()
-
-
-# Proposed Workflow:
-# 1. Fetch a DataFrame using function above
-# 2. In Python, preprocess columns in the DataFrame, so that they can be used in difference-finder.
-#    In particular, write functions to preprocess the array, struct, discrete fields.
-# 3. Pass the dataframe to difference-finder.
