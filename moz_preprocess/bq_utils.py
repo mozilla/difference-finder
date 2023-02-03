@@ -1,10 +1,13 @@
-import os 
+import os
 from google.cloud import bigquery
 
 
 path_to_parent_directory = os.path.dirname(os.path.realpath(__file__))
 
-def fetch_weekly_aggregate(week_start_date, segment, target=None, sample=None, verbose=False):
+
+def fetch_weekly_aggregate(
+    week_start_date, segment, target=None, sample=None, verbose=False
+):
     """
     Fetch a DataFrame from BigQuery with 1 week's worth of aggregated data for all Firefox Desktop clients
     satisfying `filter`. The DataFrame has a column called "segment" to segment clients on. The DataFrame
@@ -35,19 +38,24 @@ def fetch_weekly_aggregate(week_start_date, segment, target=None, sample=None, v
     client = bigquery.Client(project="mozdata")
     return client.query(sql).to_dataframe()
 
+
 def _include_sampling(sql, sample):
     """
     Append sample.sql to `sql` to include sampling.
     """
-    sql = sql.replace("--Clients Weekly\nSELECT", 
+    sql = sql.replace(
+        "--Clients Weekly\nSELECT",
         """
         ,
         --Clients Weekly
           clients_weekly AS (
           SELECT
             COUNT(DISTINCT client_id) OVER (PARTITION BY segment) as clients_per_segment,
-    """)
-    path_to_file = f"{path_to_parent_directory}/sample.sql"  # To Do: This doesn't work on Windows.
+    """,
+    )
+    path_to_file = (
+        f"{path_to_parent_directory}/sample.sql"  # To Do: This doesn't work on Windows.
+    )
     with open(path_to_file, "r") as f:
         sample_sql = f.read().strip()
     sql += sample_sql
