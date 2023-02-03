@@ -210,7 +210,7 @@ WITH
       submission_date )
   WHERE
     ( @target ) )
-  --Weekly aggregate
+  --Clients Weekly
 SELECT
   client_id,
   segment,
@@ -382,6 +382,8 @@ SELECT
   MAX(COALESCE(scalar_parent_browser_engagement_max_concurrent_tab_count_max, 0)) AS scalar_parent_browser_engagement_max_concurrent_tab_count_max,
   MAX(COALESCE(scalar_parent_browser_engagement_max_concurrent_window_count_max, 0)) AS scalar_parent_browser_engagement_max_concurrent_window_count_max,
   MAX(COALESCE(scalar_parent_browser_engagement_unique_domains_count_max, 0)) AS scalar_parent_browser_engagement_unique_domains_count_max,
+  --Aggregate by taking any value. they are all the same.
+  ANY_VALUE(sample_id) AS sample_id,
   --Custom aggregations
   COUNTIF(active_hours_sum > 0
     AND scalar_parent_browser_engagement_total_uri_count_normal_and_private_mode_sum > 0) AS qdou,
