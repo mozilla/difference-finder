@@ -209,7 +209,7 @@ WITH
     ( client_id,
       submission_date )
   WHERE
-    ( @FILTER ) )
+    ( @target ) )
   --Weekly aggregate
 SELECT
   client_id,
