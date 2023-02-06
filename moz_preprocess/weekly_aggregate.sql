@@ -159,8 +159,8 @@ WITH
   FROM
     `mozdata.search.search_clients_engines_sources_daily`
   WHERE
-    submission_date >= '@week_start_date'
-    AND submission_date <= DATE_ADD(DATE '@week_start_date', INTERVAL 6 DAY)
+    submission_date >= '{week_start_date}'
+    AND submission_date <= DATE_ADD(DATE '{week_start_date}', INTERVAL 6 DAY)
   GROUP BY
     client_id,
     submission_date ),
@@ -195,12 +195,12 @@ WITH
   FROM
     `mozdata.telemetry.clients_daily_v6`
   WHERE
-    submission_date >= '@week_start_date'
-    AND submission_date <= DATE_ADD(DATE '@week_start_date', INTERVAL 6 DAY) ),
+    submission_date >= '{week_start_date}'
+    AND submission_date <= DATE_ADD(DATE '{week_start_date}', INTERVAL 6 DAY) ),
   client_days AS (
   SELECT
     *,
-    ( @segment ) AS segment,
+    {segment} AS segment,
   FROM
     clients
   LEFT JOIN
@@ -209,11 +209,12 @@ WITH
     ( client_id,
       submission_date )
   WHERE
-    ( @target ) )
-  --Clients Weekly
+    {target} ),
+clients_weekly AS (
 SELECT
   client_id,
   segment,
+  COUNT(DISTINCT client_id) OVER (PARTITION BY segment) as clients_per_segment,
   --Aggregate by summing.
   /* These metrics are not yet implemented
   SUM(COALESCE(CAST(has_adblocker_addon AS INT), 0)) AS days_with_addblocker_addon,
@@ -470,3 +471,10 @@ FROM
 GROUP BY
   client_id,
   segment
+)
+SELECT
+  * EXCEPT(clients_per_segment)
+FROM
+  clients_weekly
+WHERE
+  {sample}
