@@ -23,7 +23,7 @@ def fetch_weekly_aggregate(
     """
     if not target:
         target = "True = True"
-    path_to_file = f"{path_to_parent_directory}/weekly_aggregate.sql"  # To Do: This doesn't work on Windows.
+    path_to_file = os.path.join(path_to_parent_directory, "weekly_aggregate.sql")
     with open(path_to_file, "r") as f:
         sql = f.read().strip()
     sql = (
