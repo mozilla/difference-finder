@@ -4,7 +4,7 @@ import pandas as pd
 def preprocess(series, series_name, min_count):
     """
     Preprocess a series of discrete data by creating dummy columns for the top 3 most-frequently-occurring values
-    that also occur more than min_count times.
+    that also occur more than min_count times. If only 1 value occurs more than min_count times, return None.
     Args:
     * series (pd.Series): Discrete data to create dummy columns for.
     * series_name (str): Name of `series`. Used to name the dummy columns.
