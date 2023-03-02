@@ -2,7 +2,7 @@ import os
 from google.cloud import bigquery
 
 
-path_to_parent_directory = os.path.dirname(os.path.realpath(__file__))
+path_to_parent_directory = os.path.dirname(os.path.realpath(os.getcwd()))
 
 
 def fetch_weekly_aggregate(
@@ -22,7 +22,7 @@ def fetch_weekly_aggregate(
     * verbose (bool): If True, prints the SQL that is run.
     """
     if not target:
-        target = "True = True"    
+        target = "True = True"
     if not sample:
         sample = "True = True"
     else:
