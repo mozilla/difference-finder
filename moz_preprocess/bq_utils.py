@@ -2,7 +2,7 @@ import os
 from google.cloud import bigquery
 
 
-path_to_parent_directory = os.path.dirname(os.path.realpath(os.getcwd()))
+path_to_parent_directory = os.path.dirname(os.path.realpath(__file__))
 
 
 def fetch_weekly_aggregate(
