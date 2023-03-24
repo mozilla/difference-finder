@@ -22,7 +22,7 @@ def fetch_weekly_aggregate(
     * verbose (bool): If True, prints the SQL that is run.
     """
     if not target:
-        target = "True = True"    
+        target = "True = True"
     if not sample:
         sample = "True = True"
     else:
